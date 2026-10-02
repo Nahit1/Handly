@@ -1,0 +1,15 @@
+services:
+  postgres:
+    image: postgres:17
+    container_name: handly-postgres
+    environment:
+      POSTGRES_DB: handly
+      POSTGRES_USER: handly
+      POSTGRES_PASSWORD: handly123
+    ports:
+      - "5432:5432"
+    volumes:
+      - handly-pgdata:/var/lib/postgresql/data
+
+volumes:
+  handly-pgdata:
