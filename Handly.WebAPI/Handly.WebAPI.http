@@ -1,6 +1,83 @@
-@Handly.WebAPI_HostAddress = http://localhost:5148
+@HostAddress = http://localhost:5148
+@ApiKey = YOUR_API_KEY_HERE
+@Token = YOUR_JWT_TOKEN_HERE
 
-GET {{Handly.WebAPI_HostAddress}}/weatherforecast/
-Accept: application/json
+### ===== PROJECT SETUP =====
 
-###
+### 1. Create Project (no auth needed) → save apiKey from response
+POST {{HostAddress}}/api/projects
+Content-Type: application/json
+
+{
+  "name": "My App",
+  "slug": "my-app"
+}
+
+### ===== USER REGISTRATION & LOGIN =====
+
+### 2. Register User (requires API Key)
+POST {{HostAddress}}/api/auth/register
+Content-Type: application/json
+X-Api-Key: {{ApiKey}}
+
+{
+  "email": "admin@handly.dev",
+  "password": "Admin123!",
+  "fullName": "Admin User"
+}
+
+### 3. Login → save token from response
+POST {{HostAddress}}/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "admin@handly.dev",
+  "password": "Admin123!"
+}
+
+### ===== DASHBOARD (JWT) =====
+
+### 4. Get Project Info (JWT)
+GET {{HostAddress}}/api/projects/me
+Authorization: Bearer {{Token}}
+
+### 5. Create Endpoint (JWT)
+POST {{HostAddress}}/api/endpoints
+Content-Type: application/json
+Authorization: Bearer {{Token}}
+
+{
+  "name": "Test Webhook",
+  "url": "https://httpbin.org/post",
+  "httpMethod": "POST",
+  "timeoutSeconds": 30,
+  "maxAttempts": 5
+}
+
+### 6. List Endpoints (JWT)
+GET {{HostAddress}}/api/endpoints
+Authorization: Bearer {{Token}}
+
+### 7. Get Delivery (JWT)
+GET {{HostAddress}}/api/deliveries/DELIVERY_ID_HERE
+Authorization: Bearer {{Token}}
+
+### 8. Get Delivery Attempts (JWT)
+GET {{HostAddress}}/api/deliveries/DELIVERY_ID_HERE/attempts
+Authorization: Bearer {{Token}}
+
+### ===== MACHINE API (API Key) =====
+
+### 9. Create Delivery (API Key - machine-to-machine)
+POST {{HostAddress}}/api/deliveries
+Content-Type: application/json
+X-Api-Key: {{ApiKey}}
+
+{
+  "endpointId": "ENDPOINT_ID_HERE",
+  "idempotencyKey": "lead-123-insider",
+  "payload": {
+    "leadId": 12345,
+    "name": "Test Lead"
+  }
+}
