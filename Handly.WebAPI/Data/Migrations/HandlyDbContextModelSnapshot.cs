@@ -201,6 +201,42 @@ namespace Handly.WebAPI.Data.Migrations
                     b.ToTable("projects", (string)null);
                 });
 
+            modelBuilder.Entity("Handly.WebAPI.Entities.ProjectMember", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<Guid>("ProjectId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("project_id");
+
+                    b.Property<string>("Role")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("role");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("user_id");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.HasIndex("ProjectId", "UserId")
+                        .IsUnique()
+                        .HasDatabaseName("ux_project_members_project_user");
+
+                    b.ToTable("project_members", (string)null);
+                });
+
             modelBuilder.Entity("Handly.WebAPI.Entities.User", b =>
                 {
                     b.Property<Guid>("Id")
@@ -230,16 +266,6 @@ namespace Handly.WebAPI.Data.Migrations
                         .HasColumnType("character varying(500)")
                         .HasColumnName("password_hash");
 
-                    b.Property<Guid>("ProjectId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("project_id");
-
-                    b.Property<string>("Role")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)")
-                        .HasColumnName("role");
-
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("updated_at");
@@ -249,8 +275,6 @@ namespace Handly.WebAPI.Data.Migrations
                     b.HasIndex("Email")
                         .IsUnique()
                         .HasDatabaseName("ux_users_email");
-
-                    b.HasIndex("ProjectId");
 
                     b.ToTable("users", (string)null);
                 });
@@ -352,15 +376,23 @@ namespace Handly.WebAPI.Data.Migrations
                     b.Navigation("Delivery");
                 });
 
-            modelBuilder.Entity("Handly.WebAPI.Entities.User", b =>
+            modelBuilder.Entity("Handly.WebAPI.Entities.ProjectMember", b =>
                 {
                     b.HasOne("Handly.WebAPI.Entities.Project", "Project")
-                        .WithMany()
+                        .WithMany("Members")
                         .HasForeignKey("ProjectId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Handly.WebAPI.Entities.User", "User")
+                        .WithMany("ProjectMembers")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Project");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Handly.WebAPI.Entities.WebhookEndpoint", b =>
@@ -384,6 +416,13 @@ namespace Handly.WebAPI.Data.Migrations
                     b.Navigation("Deliveries");
 
                     b.Navigation("Endpoints");
+
+                    b.Navigation("Members");
+                });
+
+            modelBuilder.Entity("Handly.WebAPI.Entities.User", b =>
+                {
+                    b.Navigation("ProjectMembers");
                 });
 
             modelBuilder.Entity("Handly.WebAPI.Entities.WebhookEndpoint", b =>

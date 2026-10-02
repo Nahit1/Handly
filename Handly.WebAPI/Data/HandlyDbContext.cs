@@ -10,6 +10,7 @@ public class HandlyDbContext(DbContextOptions<HandlyDbContext> options) : DbCont
     public DbSet<Delivery> Deliveries => Set<Delivery>();
     public DbSet<DeliveryAttempt> DeliveryAttempts => Set<DeliveryAttempt>();
     public DbSet<User> Users => Set<User>();
+    public DbSet<ProjectMember> ProjectMembers => Set<ProjectMember>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

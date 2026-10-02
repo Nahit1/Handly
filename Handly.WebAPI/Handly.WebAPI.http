@@ -1,24 +1,13 @@
 @HostAddress = http://localhost:5148
-@ApiKey = YOUR_API_KEY_HERE
 @Token = YOUR_JWT_TOKEN_HERE
+@ProjectId = YOUR_PROJECT_ID_HERE
+@ApiKey = YOUR_API_KEY_HERE
 
-### ===== PROJECT SETUP =====
+### ===== 1. SIGNUP & LOGIN =====
 
-### 1. Create Project (no auth needed) → save apiKey from response
-POST {{HostAddress}}/api/projects
-Content-Type: application/json
-
-{
-  "name": "My App",
-  "slug": "my-app"
-}
-
-### ===== USER REGISTRATION & LOGIN =====
-
-### 2. Register User (requires API Key)
+### Register (public - no auth)
 POST {{HostAddress}}/api/auth/register
 Content-Type: application/json
-X-Api-Key: {{ApiKey}}
 
 {
   "email": "admin@handly.dev",
@@ -26,7 +15,7 @@ X-Api-Key: {{ApiKey}}
   "fullName": "Admin User"
 }
 
-### 3. Login → save token from response
+### Login → save token from response
 POST {{HostAddress}}/api/auth/login
 Content-Type: application/json
 
@@ -35,16 +24,50 @@ Content-Type: application/json
   "password": "Admin123!"
 }
 
-### ===== DASHBOARD (JWT) =====
+### ===== 2. PROJECT MANAGEMENT (JWT) =====
 
-### 4. Get Project Info (JWT)
-GET {{HostAddress}}/api/projects/me
+### Create Project → save projectId and apiKey
+POST {{HostAddress}}/api/projects
+Content-Type: application/json
 Authorization: Bearer {{Token}}
 
-### 5. Create Endpoint (JWT)
+{
+  "name": "My App",
+  "slug": "my-app"
+}
+
+### List My Projects
+GET {{HostAddress}}/api/projects
+Authorization: Bearer {{Token}}
+
+### Get Current Project Info
+GET {{HostAddress}}/api/projects/current
+Authorization: Bearer {{Token}}
+X-Project-Id: {{ProjectId}}
+
+### List Project Members
+GET {{HostAddress}}/api/projects/current/members
+Authorization: Bearer {{Token}}
+X-Project-Id: {{ProjectId}}
+
+### Invite Member to Project
+POST {{HostAddress}}/api/projects/current/members
+Content-Type: application/json
+Authorization: Bearer {{Token}}
+X-Project-Id: {{ProjectId}}
+
+{
+  "email": "viewer@handly.dev",
+  "role": "Viewer"
+}
+
+### ===== 3. ENDPOINTS (JWT + Project) =====
+
+### Create Endpoint
 POST {{HostAddress}}/api/endpoints
 Content-Type: application/json
 Authorization: Bearer {{Token}}
+X-Project-Id: {{ProjectId}}
 
 {
   "name": "Test Webhook",
@@ -54,21 +77,14 @@ Authorization: Bearer {{Token}}
   "maxAttempts": 5
 }
 
-### 6. List Endpoints (JWT)
+### List Endpoints
 GET {{HostAddress}}/api/endpoints
 Authorization: Bearer {{Token}}
+X-Project-Id: {{ProjectId}}
 
-### 7. Get Delivery (JWT)
-GET {{HostAddress}}/api/deliveries/DELIVERY_ID_HERE
-Authorization: Bearer {{Token}}
+### ===== 4. DELIVERIES (Machine - API Key) =====
 
-### 8. Get Delivery Attempts (JWT)
-GET {{HostAddress}}/api/deliveries/DELIVERY_ID_HERE/attempts
-Authorization: Bearer {{Token}}
-
-### ===== MACHINE API (API Key) =====
-
-### 9. Create Delivery (API Key - machine-to-machine)
+### Create Delivery
 POST {{HostAddress}}/api/deliveries
 Content-Type: application/json
 X-Api-Key: {{ApiKey}}
@@ -81,3 +97,23 @@ X-Api-Key: {{ApiKey}}
     "name": "Test Lead"
   }
 }
+
+### Get Delivery (API Key)
+GET {{HostAddress}}/api/deliveries/DELIVERY_ID_HERE
+X-Api-Key: {{ApiKey}}
+
+### Get Delivery Attempts (API Key)
+GET {{HostAddress}}/api/deliveries/DELIVERY_ID_HERE/attempts
+X-Api-Key: {{ApiKey}}
+
+### ===== 5. DELIVERIES (Dashboard - JWT) =====
+
+### Get Delivery (JWT)
+GET {{HostAddress}}/api/deliveries/DELIVERY_ID_HERE
+Authorization: Bearer {{Token}}
+X-Project-Id: {{ProjectId}}
+
+### Get Delivery Attempts (JWT)
+GET {{HostAddress}}/api/deliveries/DELIVERY_ID_HERE/attempts
+Authorization: Bearer {{Token}}
+X-Project-Id: {{ProjectId}}

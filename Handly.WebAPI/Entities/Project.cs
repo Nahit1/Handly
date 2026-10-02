@@ -12,4 +12,5 @@ public class Project
 
     public ICollection<WebhookEndpoint> Endpoints { get; set; } = [];
     public ICollection<Delivery> Deliveries { get; set; } = [];
+    public ICollection<ProjectMember> Members { get; set; } = [];
 }

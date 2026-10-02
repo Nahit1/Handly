@@ -54,7 +54,7 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
-app.UseMiddleware<ApiKeyMiddleware>();
+app.UseMiddleware<AuthMiddleware>();
 
 app.MapAuthEndpoints();
 app.MapProjectEndpoints();

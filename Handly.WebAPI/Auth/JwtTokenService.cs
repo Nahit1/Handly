@@ -20,8 +20,7 @@ public class JwtTokenService(IOptions<JwtSettings> options)
         {
             new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
             new Claim(JwtRegisteredClaimNames.Email, user.Email),
-            new Claim("projectId", user.ProjectId.ToString()),
-            new Claim(ClaimTypes.Role, user.Role),
+            new Claim("fullName", user.FullName),
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
         };
 
