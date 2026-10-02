@@ -1,0 +1,6 @@
+@Handly.WebAPI_HostAddress = http://localhost:5148
+
+GET {{Handly.WebAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
