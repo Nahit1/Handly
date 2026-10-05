@@ -1,0 +1,6 @@
+@Handly.MockAPI_HostAddress = http://localhost:5074
+
+GET {{Handly.MockAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
