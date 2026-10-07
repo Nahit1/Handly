@@ -290,10 +290,6 @@ namespace Handly.WebAPI.Data.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_at");
 
-                    b.Property<string>("DefaultPayload")
-                        .HasColumnType("jsonb")
-                        .HasColumnName("default_payload");
-
                     b.Property<string>("Headers")
                         .HasColumnType("jsonb")
                         .HasColumnName("headers");

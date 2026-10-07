@@ -8,7 +8,6 @@ public class WebhookEndpoint
     public required string Url { get; set; }
     public required string HttpMethod { get; set; }
     public string? Headers { get; set; }
-    public string? DefaultPayload { get; set; }
     public int TimeoutSeconds { get; set; } = 30;
     public int MaxAttempts { get; set; } = 5;
     public bool IsActive { get; set; } = true;
