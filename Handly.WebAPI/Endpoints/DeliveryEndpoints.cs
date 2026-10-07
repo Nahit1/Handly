@@ -40,7 +40,7 @@ public static class DeliveryEndpoints
                 EndpointId = endpoint.Id,
                 ExternalId = request.ExternalId,
                 IdempotencyKey = request.IdempotencyKey,
-                Payload = request.Payload is not null ? request.Payload.Value.GetRawText() : "{}",
+                Payload = request.Payload is not null ? request.Payload.Value.GetRawText() : endpoint.DefaultPayload ?? "{}",
                 Status = DeliveryStatus.Pending,
                 AttemptCount = 0,
                 NextAttemptAt = now,
