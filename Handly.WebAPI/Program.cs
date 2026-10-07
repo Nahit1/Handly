@@ -10,6 +10,13 @@ using Microsoft.IdentityModel.Tokens;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddOpenApi();
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("HandlyUi", policy => policy
+        .WithOrigins("http://localhost:4200", "http://127.0.0.1:4200")
+        .AllowAnyHeader()
+        .AllowAnyMethod());
+});
 
 builder.Services.AddDbContext<HandlyDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -26,6 +33,9 @@ builder.Services.AddSingleton<JwtTokenService>();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
+        // Keep standard JWT claim names (such as `sub`) intact. AuthMiddleware
+        // reads the user id from the `sub` claim for project authorization.
+        options.MapInboundClaims = false;
         options.TokenValidationParameters = new TokenValidationParameters
         {
             ValidateIssuer = true,
@@ -52,6 +62,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseCors("HandlyUi");
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseMiddleware<AuthMiddleware>();

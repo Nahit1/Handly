@@ -27,7 +27,7 @@ services:
       context: ./Handly.MockAPI
       dockerfile: Dockerfile
     ports:
-      - "5200:8080"
+      - "${MOCK_API_PORT}:8080"
     environment:
       ASPNETCORE_HTTP_PORTS: 8080
   postgres:

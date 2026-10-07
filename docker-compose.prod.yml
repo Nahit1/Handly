@@ -2,7 +2,9 @@ services:
   api:
     ports: !override
       - "127.0.0.1:${API_PORT}:8080"
-
+  mockapi:
+    ports: !override
+      - "127.0.0.1:${MOCK_API_PORT}:8080"
 
   postgres:
     ports: !reset []
